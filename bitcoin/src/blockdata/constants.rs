@@ -27,9 +27,9 @@ pub const DIFFCHANGE_TIMESPAN: u32 = 14 * 24 * 3600;
 pub const WITNESS_SCALE_FACTOR: usize = units::weight::WITNESS_SCALE_FACTOR;
 /// The maximum allowed number of signature check operations in a block.
 pub const MAX_BLOCK_SIGOPS_COST: i64 = 80_000;
-/// Mainnet (bitcoin) pubkey address prefix.
+/// Mainnet (litecoin) pubkey address prefix.
 pub const PUBKEY_ADDRESS_PREFIX_MAIN: u8 = 48; // 0x30
-/// Mainnet (bitcoin) script address prefix.
+/// Mainnet (litecoin) script address prefix.
 pub const SCRIPT_ADDRESS_PREFIX_MAIN: u8 = 50; // 0x32
 /// Test (testnet, signet, regtest) pubkey address prefix.
 pub const PUBKEY_ADDRESS_PREFIX_TEST:  u8 = 111; // 0x6f

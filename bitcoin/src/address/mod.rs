@@ -250,9 +250,9 @@ impl KnownHrp {
 
     /// Constructs a new [`KnownHrp`] from a [`bech32::Hrp`].
     fn from_hrp(hrp: Hrp) -> Result<Self, UnknownHrpError> {
-        if hrp == bech32::hrp::BC {
+        if hrp == Hrp::parse_unchecked("ltc") {
             Ok(Self::Mainnet)
-        } else if hrp.is_valid_on_testnet() || hrp.is_valid_on_signet() {
+        } else if hrp == Hrp::parse_unchecked("tltc") || hrp.is_valid_on_testnet() || hrp.is_valid_on_signet() {
             Ok(Self::Testnets)
         } else if hrp == bech32::hrp::BCRT {
             Ok(Self::Regtest)
@@ -264,8 +264,8 @@ impl KnownHrp {
     /// Converts, infallibly a known HRP to a [`bech32::Hrp`].
     fn to_hrp(self) -> Hrp {
         match self {
-            Self::Mainnet => bech32::hrp::BC,
-            Self::Testnets => bech32::hrp::TB,
+            Self::Mainnet => Hrp::parse_unchecked("ltc"),
+            Self::Testnets => Hrp::parse_unchecked("tltc"),
             Self::Regtest => bech32::hrp::BCRT,
         }
     }
