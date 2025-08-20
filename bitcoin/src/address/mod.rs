@@ -252,7 +252,7 @@ impl KnownHrp {
     fn from_hrp(hrp: Hrp) -> Result<Self, UnknownHrpError> {
         if hrp == Hrp::parse_unchecked("ltc") {
             Ok(Self::Mainnet)
-        } else if hrp == Hrp::parse_unchecked("tltc") || hrp.is_valid_on_testnet() || hrp.is_valid_on_signet() {
+        } else if hrp == Hrp::parse_unchecked("tltc") {
             Ok(Self::Testnets)
         } else if hrp == bech32::hrp::BCRT {
             Ok(Self::Regtest)
