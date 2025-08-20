@@ -69,6 +69,10 @@ use crate::script::{
 };
 use crate::taproot::TapNodeHash;
 
+// Litecoin HRP constants
+static LTC_HRP: Hrp = Hrp::parse_unchecked("ltc");
+static TLTC_HRP: Hrp = Hrp::parse_unchecked("tltc");
+
 #[rustfmt::skip]                // Keep public re-exports separate.
 #[doc(inline)]
 pub use self::error::{
@@ -250,9 +254,9 @@ impl KnownHrp {
 
     /// Constructs a new [`KnownHrp`] from a [`bech32::Hrp`].
     fn from_hrp(hrp: Hrp) -> Result<Self, UnknownHrpError> {
-        if hrp == Hrp::parse_unchecked("ltc") {
+        if hrp == LTC_HRP {
             Ok(Self::Mainnet)
-        } else if hrp == Hrp::parse_unchecked("tltc") {
+        } else if hrp == TLTC_HRP {
             Ok(Self::Testnets)
         } else if hrp == bech32::hrp::BCRT {
             Ok(Self::Regtest)
@@ -264,8 +268,8 @@ impl KnownHrp {
     /// Converts, infallibly a known HRP to a [`bech32::Hrp`].
     fn to_hrp(self) -> Hrp {
         match self {
-            Self::Mainnet => Hrp::parse_unchecked("ltc"),
-            Self::Testnets => Hrp::parse_unchecked("tltc"),
+            Self::Mainnet => LTC_HRP,
+            Self::Testnets => TLTC_HRP,
             Self::Regtest => bech32::hrp::BCRT,
         }
     }
