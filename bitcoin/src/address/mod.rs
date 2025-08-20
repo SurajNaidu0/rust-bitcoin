@@ -972,15 +972,15 @@ impl<V: NetworkValidation> fmt::Debug for Address<V> {
 
 /// Address can be parsed only with `NetworkUnchecked`.
 ///
-/// Only SegWit bech32 addresses prefixed with `bc`, `bcrt` or `tb` and legacy base58 addresses
-/// prefixed with `1`, `2`, `3`, `m` or `n` are supported.
+/// Only SegWit bech32 addresses prefixed with `ltc1`, `tltc1` or `bcrt1` and legacy base58 addresses
+/// prefixed with `L`, `M`, `m` or `n` are supported.
 ///
 /// # Errors
 ///
-/// - [`ParseError::Bech32`] if the SegWit address begins with a `bc`, `bcrt` or `tb` and is not a
+/// - [`ParseError::Bech32`] if the SegWit address begins with a `ltc1`, `tltc1` or `bcrt1` and is not a
 ///   valid bech32 address.
 ///
-/// - [`ParseError::Base58`] if the legacy address begins with a `1`, `2`, `3`, `m` or `n` and is
+/// - [`ParseError::Base58`] if the legacy address begins with a `L`, `M`, `m` or `n` and is
 ///   not a valid base58 address.
 ///
 /// - [`UnknownHrpError`] if the address does not begin with one of the above SegWit or
@@ -989,7 +989,7 @@ impl<U: NetworkValidationUnchecked> FromStr for Address<U> {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, ParseError> {
-        if ["bc1", "bcrt1", "tb1"].iter().any(|&prefix| s.to_lowercase().starts_with(prefix)) {
+        if ["ltc1", "tltc1", "bcrt1"].iter().any(|&prefix| s.to_lowercase().starts_with(prefix)) {
             let address = Address::from_bech32_str(s)?;
             // We know that `U` is only ever `NetworkUnchecked` but the compiler does not.
             Ok(Address::from_inner(address.into_inner()))
