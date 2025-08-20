@@ -250,9 +250,10 @@ impl KnownHrp {
 
     /// Constructs a new [`KnownHrp`] from a [`bech32::Hrp`].
     fn from_hrp(hrp: Hrp) -> Result<Self, UnknownHrpError> {
-        if hrp == bech32::hrp::BC {
+        let hrp_str = hrp.to_lowercase();
+        if hrp_str == "dc" {
             Ok(Self::Mainnet)
-        } else if hrp.is_valid_on_testnet() || hrp.is_valid_on_signet() {
+        } else if hrp_str == "tdge" {
             Ok(Self::Testnets)
         } else if hrp == bech32::hrp::BCRT {
             Ok(Self::Regtest)
@@ -264,8 +265,8 @@ impl KnownHrp {
     /// Converts, infallibly a known HRP to a [`bech32::Hrp`].
     fn to_hrp(self) -> Hrp {
         match self {
-            Self::Mainnet => bech32::hrp::BC,
-            Self::Testnets => bech32::hrp::TB,
+            Self::Mainnet => Hrp::parse("dc").expect("valid hrp"),
+            Self::Testnets => Hrp::parse("tdge").expect("valid hrp"),
             Self::Regtest => bech32::hrp::BCRT,
         }
     }
@@ -971,15 +972,15 @@ impl<V: NetworkValidation> fmt::Debug for Address<V> {
 
 /// Address can be parsed only with `NetworkUnchecked`.
 ///
-/// Only SegWit bech32 addresses prefixed with `bc`, `bcrt` or `tb` and legacy base58 addresses
-/// prefixed with `1`, `2`, `3`, `m` or `n` are supported.
+/// Only SegWit bech32 addresses prefixed with `dc1`, `tdge1` or `bcrt1` and legacy base58 addresses
+/// prefixed with `D`, `A`, `9`, `m` or `n` are supported.
 ///
 /// # Errors
 ///
-/// - [`ParseError::Bech32`] if the SegWit address begins with a `bc`, `bcrt` or `tb` and is not a
+/// - [`ParseError::Bech32`] if the SegWit address begins with a `dc1`, `tdge1` or `bcrt1` and is not a
 ///   valid bech32 address.
 ///
-/// - [`ParseError::Base58`] if the legacy address begins with a `1`, `2`, `3`, `m` or `n` and is
+/// - [`ParseError::Base58`] if the legacy address begins with a `D`, `A`, `9`, `m` or `n` and is
 ///   not a valid base58 address.
 ///
 /// - [`UnknownHrpError`] if the address does not begin with one of the above SegWit or
@@ -988,11 +989,11 @@ impl<U: NetworkValidationUnchecked> FromStr for Address<U> {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, ParseError> {
-        if ["bc1", "bcrt1", "tb1"].iter().any(|&prefix| s.to_lowercase().starts_with(prefix)) {
+        if ["dc1", "tdge1", "bcrt1"].iter().any(|&prefix| s.to_lowercase().starts_with(prefix)) {
             let address = Address::from_bech32_str(s)?;
             // We know that `U` is only ever `NetworkUnchecked` but the compiler does not.
             Ok(Address::from_inner(address.into_inner()))
-        } else if ["1", "2", "3", "m", "n"].iter().any(|&prefix| s.starts_with(prefix)) {
+        } else if ["D", "A", "9", "m", "n"].iter().any(|&prefix| s.starts_with(prefix)) {
             let address = Address::from_base58_str(s)?;
             Ok(Address::from_inner(address.into_inner()))
         } else {
